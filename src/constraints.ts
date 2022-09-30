@@ -2,6 +2,8 @@ import { IConstraint, IError } from './interfaces';
 import * as phone from 'google-libphonenumber';
 
 const phoneUtil = phone.PhoneNumberUtil.getInstance();
+const list: { [k: string]: string } = {};
+for (const code of phoneUtil.getSupportedRegions()) list[code] = '';
 
 const validateEmail = (email: string) => {
   return email.match(
@@ -21,21 +23,23 @@ export function TestConstraint(val: any, c: IConstraint, table: string, varName:
         error: `Invalid length for var "${varName}". Max length set to ${c.max}.`,
         table,
       };
-    switch (c.format) {
-      case 'email':
-        if (!validateEmail(val))
-          return {
-            error: `Invalid email format var "${varName}".`,
-            table,
-          };
-        break;
-      case 'phone':
-        if (!phoneUtil.isValidNumber(phoneUtil.parse(val, 'FR')))
-          return {
-            error: `Invalid phone format var "${varName}".`,
-            table,
-          };
-        break;
+    if (c.email && !validateEmail(val))
+      return {
+        error: `Invalid email format var "${varName}".`,
+        table,
+      };
+    if (c.phone) {
+      const code = c.phone.toUpperCase();
+      if (list[code] === undefined)
+        return {
+          error: `Invalid country code var "${varName}"`,
+          table,
+        };
+      if (!phoneUtil.isValidNumber(phoneUtil.parse(val, code)))
+        return {
+          error: `Invalid phone format var "${varName}".`,
+          table,
+        };
     }
   } else if (typeof val === 'number') {
     if (c.min && val < c.min)
@@ -50,16 +54,4 @@ export function TestConstraint(val: any, c: IConstraint, table: string, varName:
       };
   }
   return null;
-}
-
-export class Constraint {
-  public _c: IConstraint = {};
-  min(val: number): Constraint {
-    this._c.min = val;
-    return this;
-  }
-  max(val: number): Constraint {
-    this._c.max = val;
-    return this;
-  }
 }

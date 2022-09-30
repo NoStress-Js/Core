@@ -11,9 +11,9 @@ export function ParseJsType(val: any): ITypes | null {
 
 export function CheckTypes(excepted: ITypes | ITypes[], inputType: ITypes): boolean {
   if (typeof excepted === 'string') {
-    if (SqlToJs[excepted] != inputType) return false;
+    if (excepted !== inputType) return false;
   } else {
-    for (const e of excepted) if (SqlToJs[e] != inputType) return false;
+    if (!excepted.includes(inputType)) return false;
   }
   return true;
 }

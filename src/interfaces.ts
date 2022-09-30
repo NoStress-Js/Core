@@ -2,8 +2,8 @@ export type ITypes = 'string' | 'int' | 'decimal';
 
 export type ISqlTypes = 'string' | 'int' | 'enum' | 'decimal';
 
-export const SqlToJs: Record<ISqlTypes, ITypes> = {
-  decimal: 'decimal',
+export const SqlToJs: Record<ISqlTypes, ITypes | ITypes[]> = {
+  decimal: ['decimal', 'int'],
   int: 'int',
   string: 'string',
   enum: 'string',
@@ -39,6 +39,21 @@ export interface IError {
 export interface IConstraint {
   min?: number;
   max?: number;
-  format?: 'email' | 'phone' | 'ip';
+  email?:
+    | boolean
+    | {
+        whitelistDomains?: string[];
+        blacklistDomains?: string[];
+      };
+  phone?: string;
   validator?: ((val: any, key: string) => IError | null) | [k: (val: any, key: string) => IError | null];
+}
+
+export interface ICheckSettings {
+  strict?: boolean;
+  required?: string[];
+}
+
+export interface ISettings {
+  refreshInterval?: number;
 }

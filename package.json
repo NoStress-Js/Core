@@ -27,6 +27,7 @@
         "url": "https://github.com/NoStress-Js/Core.git"
     },
     "dependencies": {
+        "async-wait-until": "^2.0.12",
         "google-libphonenumber": "^3.2.31"
     }
 }
