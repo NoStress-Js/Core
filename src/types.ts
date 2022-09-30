@@ -19,6 +19,8 @@ export function CheckTypes(excepted: ITypes | ITypes[], inputType: ITypes): bool
 }
 
 export function ParseEnum(val: string): string[] {
+  const m = val.match(/^enum\(\'(.*)\'\)$/);
+  if (m && m.length > 1) return m[1].split("','");
   return [];
 }
 
