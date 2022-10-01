@@ -1,5 +1,5 @@
 import { Database } from './database';
-import { ISettings } from './interfaces';
+import { IConstraint, ISettings } from './interfaces';
 import { Table } from './table';
 
 export function Init(db: Database, settings: ISettings = {}) {
@@ -15,8 +15,8 @@ export function Init(db: Database, settings: ISettings = {}) {
     }, settings.refreshInterval * 1000);
 }
 
-export async function NewTable(name: string): Promise<Table> {
-  const t = new Table(name);
+export async function NewTable(name: string, constraints: { [k: string]: IConstraint } = {}): Promise<Table> {
+  const t = new Table(name, constraints);
   await t.Load();
   return t;
 }

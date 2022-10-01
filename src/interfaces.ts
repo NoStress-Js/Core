@@ -34,17 +34,29 @@ export interface ITableDef {
 export interface IError {
   error: string;
   table: string;
+  property: string | null;
+  exceptedType: ITypes | ITypes[] | null;
+  errorType:
+    | 'missingProperty'
+    | 'unknownProperty'
+    | 'wrongType'
+    | 'other'
+    | 'typeNotSupported'
+    | 'tooLong'
+    | 'tooShort'
+    | 'tooLow'
+    | 'tooHigh'
+    | 'invalidEmail'
+    | 'invalidPhone'
+    | 'invalidPhoneCountry'
+    | 'invalidIpFormat'
+    | 'failedChecking';
 }
 
 export interface IConstraint {
   min?: number;
   max?: number;
-  email?:
-    | boolean
-    | {
-        whitelistDomains?: string[];
-        blacklistDomains?: string[];
-      };
+  email?: boolean;
   phone?: string;
   validator?: ((val: any, key: string) => IError | null) | [k: (val: any, key: string) => IError | null];
 }

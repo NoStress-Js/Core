@@ -15,42 +15,63 @@ export function TestConstraint(val: any, c: IConstraint, table: string, varName:
   if (typeof val === 'string') {
     if (c.min && val.length < c.min)
       return {
-        error: `Invalid length for var "${varName}". Min length set to ${c.min}.`,
+        error: `Invalid length for property "${varName}". Min length set to ${c.min}.`,
         table,
+        property: varName,
+        exceptedType: null,
+        errorType: 'tooShort',
       };
     if (c.max && val.length > c.max)
       return {
-        error: `Invalid length for var "${varName}". Max length set to ${c.max}.`,
+        error: `Invalid length for property "${varName}". Max length set to ${c.max}.`,
         table,
+        property: varName,
+        exceptedType: null,
+        errorType: 'tooLong',
       };
     if (c.email && !validateEmail(val))
       return {
-        error: `Invalid email format var "${varName}".`,
+        error: `Invalid email format for property "${varName}".`,
         table,
+        property: varName,
+        exceptedType: null,
+        errorType: 'invalidEmail',
       };
     if (c.phone) {
       const code = c.phone.toUpperCase();
       if (list[code] === undefined)
         return {
-          error: `Invalid country code var "${varName}"`,
+          error: `Invalid country code for property "${varName}"`,
           table,
+          property: varName,
+          exceptedType: null,
+          errorType: 'invalidPhoneCountry',
         };
       if (!phoneUtil.isValidNumber(phoneUtil.parse(val, code)))
         return {
-          error: `Invalid phone format var "${varName}".`,
+          error: `Invalid phone format for property "${varName}".`,
           table,
+          property: varName,
+          exceptedType: null,
+          errorType: 'invalidPhone',
         };
     }
   } else if (typeof val === 'number') {
     if (c.min && val < c.min)
       return {
-        error: `Var "${varName}" too low. Min set to ${c.min}.`,
+        error: `Value too low for property "${varName}". Min set to ${c.min}.`,
         table,
+        property: varName,
+        exceptedType: null,
+        errorType: 'tooLow',
       };
     if (c.max && val > c.max)
       return {
-        error: `Var "${varName}" too high. Max set to ${c.max}.`,
+        error: `Value too high for property "${varName}". Max set to ${c.max}.`,
         table,
+        property: varName,
+        exceptedType: null,
+        errorType: 'tooHigh',
       };
   }
   return null;
