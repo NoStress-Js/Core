@@ -53,12 +53,18 @@ export interface IError {
     | 'failedChecking';
 }
 
+export interface IValidator {
+  table: string;
+  property: string;
+  value: any;
+}
+
 export interface IConstraint {
   min?: number;
   max?: number;
   email?: boolean;
   phone?: string;
-  validator?: ((val: any, key: string) => IError | null) | [k: (val: any, key: string) => IError | null];
+  validator?: ((infos: IValidator) => IError | null) | [k: (infos: IValidator) => IError | null];
 }
 
 export interface ICheckSettings {

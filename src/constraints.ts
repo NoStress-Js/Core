@@ -74,5 +74,24 @@ export function TestConstraint(val: any, c: IConstraint, table: string, varName:
         errorType: 'tooHigh',
       };
   }
+  if (c.validator) {
+    if (typeof c.validator === 'function') {
+      const r = c.validator({
+        table,
+        property: varName,
+        value: val,
+      });
+      if (r != null) return r;
+    } else {
+      for (const v of c.validator) {
+        const r = v({
+          table,
+          property: varName,
+          value: val,
+        });
+        if (r != null) return r;
+      }
+    }
+  }
   return null;
 }
